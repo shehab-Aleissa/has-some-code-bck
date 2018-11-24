@@ -4,15 +4,14 @@ from django.contrib.auth.models import User
 import datetime
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=120)
+# class Category(models.Model):
+#     name = models.CharField(max_length=120)
     
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class SellingBrandsCategory(models.Model):
-    category = models.ForeignKey(Category, related_name='brands', on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
     logo = models.ImageField(blank=True, null=True)
 
@@ -20,13 +19,21 @@ class SellingBrandsCategory(models.Model):
         return self.name
 
 
+class classesOfTheBrand(models.Model):
+    category = models.ForeignKey(SellingBrandsCategory, on_delete=models.CASCADE)
+    name = models.CharField(max_length=120)
+
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     img = models.ImageField(blank=True, null=True)
+    viewers = models.PositiveIntegerField(default=1)
     brand = models.ForeignKey(SellingBrandsCategory, on_delete=models.CASCADE)
+    brand_class = models.ForeignKey(classesOfTheBrand, on_delete=models.CASCADE)
     ##############################YEARS##################################
     YEAR_CHOICES = []
     for r in range(1940, (datetime.datetime.now().year+2)):
@@ -82,7 +89,6 @@ class Post(models.Model):
         ('SUV', 'SUV'),
         ('Hatchback', 'Hatchback'),
         ('Coupe', 'Coupe'),
-        ('Convertible', 'Convertible'),
         ('Pickup Truck', 'Pickup Truck'),
         ('Sport', 'Sport'),
         ('MicroCar', 'MicroCar'),
@@ -102,9 +108,19 @@ class Post(models.Model):
     ##############################ADDED##################################
     added = models.DateTimeField(auto_now_add=True, blank=True)
 
+    CONVERTABLE_CHOICES = [
+        ('Yes', 'Yes'),
+        ('No', 'No')
+    ]
+    convertable = models.CharField(max_length=120, choices=CONVERTABLE_CHOICES)
     
     def __str__(self):
         return str(self.id)
+
+
+# class Images(models.Model):
+#     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+#     image = models.ImageField(blank=True, null=True)
 
 
 

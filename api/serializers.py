@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_jwt.settings import api_settings
-from .models import Category, SellingBrandsCategory, Post
+from .models import SellingBrandsCategory, Post
 
 
 
@@ -33,31 +33,43 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username"]
 
+class PostSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    # brand = SellingBrandsSerializer()
+    class Meta:
+        model = Post
+        fields = '__all__'
 
-class SellingCategorySerializer(serializers.ModelSerializer):
+class SellingBrandsSerializer(serializers.ModelSerializer):
     # category = serializers.SerializerMethodField()
+    # posts = serializers.SerializerMethodField()
 
     # def get_category
     class Meta:
         model = SellingBrandsCategory
-        exclude = ['category']
-
-    
-class CategorySerializer(serializers.ModelSerializer):
-    brands = serializers.SerializerMethodField()
-   
-
-    class Meta:
-        model = Category
         fields = '__all__'
-    
-    
-    def get_brands(self, obj):
-        brands = obj.brands.all()
-        return SellingCategorySerializer(brands, many=True, context=self.context).data
 
-class PostSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    class Meta:
-        model = Post
-        fields = '__all__'
+    # def get_posts(self, obj):
+    #     posts = obj.post_set.all()
+    #     return PostSerializer(posts, many=True, context=self.context).data  
+
+# class BrandsPostsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = SellingBrandsCategory
+#         fields = '__all__'
+    
+# class CategorySerializer(serializers.ModelSerializer):
+#     brands = serializers.SerializerMethodField()
+
+
+#     class Meta:
+#         model = Category
+#         fields = '__all__'
+    
+    
+#     def get_brands(self, obj):
+#         brands = obj.brands.all()
+#         return SellingCategorySerializer(brands, many=True, context=self.context).data
+
+
+

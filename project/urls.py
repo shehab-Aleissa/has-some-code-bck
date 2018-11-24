@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import CategoriesList, Selling, RegisterAPIView, PostList
+from api.views import SellingBrands, RegisterAPIView, PostList, BrandsPosts, ViewsCount
 from django.conf.urls.static import static
 from django.conf import settings
+from api import views
 from rest_framework_jwt.views import obtain_jwt_token
 # from graphene_django.views import GraphQLView
 # from schema import schema
@@ -30,10 +31,14 @@ urlpatterns = [
 
     # path('graphql', GraphQLView.as_view(graphiql=True, schema=schema)),
 
-    path('category/', CategoriesList.as_view(), name='category-list'),
-    path('selling/', Selling.as_view(), name='selling-list'), 
+    # path('category/', CategoriesList.as_view(), name='category-list'),
+    path('selling/brands/', SellingBrands.as_view(), name='sellingBrands-list'), 
 
-    path('posts/', PostList.as_view(), name='posts')
+    path('posts/', PostList.as_view(), name='posts'),
+    path('brand/posts/<int:brand_id>', BrandsPosts.as_view(), name='brand-posts'),
+
+    path('post/views/<int:post_id>', ViewsCount.as_view(), name='post-views')
+    # path('detailed/posts/<int:post_id>', DetailedPosts.as_view(), name='detailed_id'),
 ]
 
 if settings.DEBUG:

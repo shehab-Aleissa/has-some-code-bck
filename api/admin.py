@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Category, SellingBrandsCategory, Post
+from .models import SellingBrandsCategory, Post, classesOfTheBrand
 # Register your models here.
-admin.site.register(Category)
 admin.site.register(SellingBrandsCategory)
 admin.site.register(Post)
+admin.site.register(classesOfTheBrand)
