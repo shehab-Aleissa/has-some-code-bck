@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import SellingBrands, RegisterAPIView, PostList, BrandsPosts, ViewsCount
+from api.views import SellingBrands, RegisterAPIView, PostList, BrandsPosts, ViewsCount, LatestPosts, MostViewed, BrandClass
 from django.conf.urls.static import static
 from django.conf import settings
 from api import views
@@ -36,9 +36,11 @@ urlpatterns = [
 
     path('posts/', PostList.as_view(), name='posts'),
     path('brand/posts/<int:brand_id>', BrandsPosts.as_view(), name='brand-posts'),
+    path('brand/classes/<int:brand_id>', BrandClass.as_view(), name='brand-classes'),
 
-    path('post/views/<int:post_id>', ViewsCount.as_view(), name='post-views')
-    # path('detailed/posts/<int:post_id>', DetailedPosts.as_view(), name='detailed_id'),
+    path('post/views/<int:post_id>', ViewsCount.as_view(), name='post-views'),
+    path('latest/posts/', LatestPosts.as_view(), name='latest-posts'),
+    path('most/viewed/posts/', MostViewed.as_view(), name='most-viewed-posts'),
 ]
 
 if settings.DEBUG:

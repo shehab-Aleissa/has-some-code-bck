@@ -19,7 +19,7 @@ class SellingBrandsCategory(models.Model):
         return self.name
 
 
-class classesOfTheBrand(models.Model):
+class ClassesOfTheBrand(models.Model):
     category = models.ForeignKey(SellingBrandsCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
 
@@ -28,17 +28,20 @@ class classesOfTheBrand(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     img = models.ImageField(blank=True, null=True)
     viewers = models.PositiveIntegerField(default=1)
     brand = models.ForeignKey(SellingBrandsCategory, on_delete=models.CASCADE)
-    brand_class = models.ForeignKey(classesOfTheBrand, on_delete=models.CASCADE)
+    brand_class = models.ForeignKey(ClassesOfTheBrand, on_delete=models.CASCADE)
+    extra_phone_number = models.BigIntegerField(blank=True, null=True)
+    posted_on = models.DateTimeField(auto_now_add=True)
+    is_freezed = models.BooleanField(default=False)
+
     ##############################YEARS##################################
     YEAR_CHOICES = []
     for r in range(1940, (datetime.datetime.now().year+2)):
         YEAR_CHOICES.append((r,r))
-    year_of_made = models.IntegerField(choices=YEAR_CHOICES, blank=True, null=True)
+    year_of_made = models.IntegerField(choices=YEAR_CHOICES)
     ##############################TRANSMISSION##################################
     TRANSMISSION_CHOICES = [
         ('Automatic', 'Automatic'),
@@ -79,6 +82,7 @@ class Post(models.Model):
     interior_color = models.CharField(max_length=120, choices=COLOR_CHOICES, blank=True, null=True)
     ##############################PRICE##################################
     price = models.IntegerField(blank=True, null=True)
+    price_is_hidden = models.BooleanField(default=False)
 
     ##############################KILOMETER##################################
     Kilometer = models.IntegerField(blank=True, null=True)
@@ -104,9 +108,6 @@ class Post(models.Model):
         ('Panorama', 'Panorama'),
     ]
     sunroof = models.CharField(max_length=120, choices=SUNROOF_CHOICES, blank=True, null=True)
-
-    ##############################ADDED##################################
-    added = models.DateTimeField(auto_now_add=True, blank=True)
 
     CONVERTABLE_CHOICES = [
         ('Yes', 'Yes'),

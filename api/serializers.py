@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_jwt.settings import api_settings
-from .models import SellingBrandsCategory, Post
+from .models import SellingBrandsCategory, Post, ClassesOfTheBrand
 
 
 
@@ -33,13 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username"]
 
-class PostSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    # brand = SellingBrandsSerializer()
-    class Meta:
-        model = Post
-        fields = '__all__'
-
 class SellingBrandsSerializer(serializers.ModelSerializer):
     # category = serializers.SerializerMethodField()
     # posts = serializers.SerializerMethodField()
@@ -48,6 +41,20 @@ class SellingBrandsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SellingBrandsCategory
         fields = '__all__'
+
+class BrandClassSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassesOfTheBrand
+        fields = '__all__'
+
+class PostSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    brand = SellingBrandsSerializer()
+    brand_class = BrandClassSerializer()
+    class Meta:
+        model = Post
+        fields = '__all__'
+
 
     # def get_posts(self, obj):
     #     posts = obj.post_set.all()

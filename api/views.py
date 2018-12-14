@@ -11,30 +11,36 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView ,
     DestroyAPIView)
 
-from .models import SellingBrandsCategory, Post
+from .models import SellingBrandsCategory, Post, ClassesOfTheBrand
 
-from .serializers import SellingBrandsSerializer, RegisterSerializer, PostSerializer
+from .serializers import SellingBrandsSerializer, RegisterSerializer, PostSerializer, BrandClassSerializer
 # Create your views here.
 
 
 class RegisterAPIView(CreateAPIView):
     serializer_class = RegisterSerializer
 
+    # GETS THE SELLING BRANDS
 class SellingBrands(ListAPIView):
     queryset = SellingBrandsCategory.objects.all()
     serializer_class = SellingBrandsSerializer
 
+    # GETS ALL THE POSTS IN THE DATABASE
 class PostList(ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-# class BrandsPosts(ListView):
-#     model = SellingBrandsCategory
-#     serializer_class = BrandsPostsSerializer
-    
-#     def get_queryset(self):
-#         return SellingBrandsCategory.objects.get(id=)
+    # GETS THE LATEST (5) POSTS IN THE DATABASE
+class LatestPosts(ListAPIView):
+    queryset = Post.objects.all().order_by('-posted_on')[:5]
+    serializer_class = PostSerializer
 
+    # GETS THE MOST (5) POSTS IN THE DATABASE
+class MostViewed(ListAPIView):
+    queryset = Post.objects.all().order_by('-viewers')[:5]
+    serializer_class = PostSerializer
+
+    # DO THE FUNCTIONALITY OF THE VIEWERS COUNT
 class ViewsCount(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self, request, post_id, format=None):
@@ -43,7 +49,7 @@ class ViewsCount(APIView):
         post.save()
         return Response(post.viewers)
 
-
+    # GETS ONLY THE POSTS RELATED TO THE BRAND THAT HAVE BEEN CHOOSEN IN THE FRONTEND
 class BrandsPosts(ListAPIView):
     serializer_class = PostSerializer
 
@@ -51,29 +57,14 @@ class BrandsPosts(ListAPIView):
         brand_id = self.kwargs['brand_id']
         brand = SellingBrandsCategory.objects.get(id=brand_id)
         return brand.post_set.all()
-    # def get(self, request, brand_id):
-    #     brand = SellingBrandsCategory.objects.get(id=brand_id)
-    #     posts = brand.post_set.all()
-    #     serializer = PostSerializer(posts, many=True)
-    #     return Response(serializer.data)
+   
 
+class BrandClass(ListAPIView):
+    serializer_class = BrandClassSerializer
 
-# class DetailedPosts(ListAPIView):
-
-#     serializer_class = PostSerializer
-
-#     def get_queryset(self):
-        
-#         post_id = self.kwargs['post_id']
-#         return Post.objects.filter(id=post_id)
-
-# class PostByBrand(ListAPIView):
-#     def getBrandPost(self, request,post_id, *args, **kwargs, ):
-#         brandPost = Post.objects.get(id=post_id)
-#         return brandPost
-
-#     def get_queryset(self):
-#         queryset = Post.objects.get()
-#         return queryset
+    def get_queryset(self, *args, **kwargs):
+        brand_id = self.kwargs['brand_id']
+        brand = SellingBrands.objects.get(id=brand_id)
+        return brand.classesofthebrand_set.all()
 
 
