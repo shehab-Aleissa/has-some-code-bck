@@ -1,6 +1,8 @@
 from django.contrib import admin
-from .models import SellingBrandsCategory, Post, ClassesOfTheBrand
+from .models import Brand, Post, ModelOfBrand, SpecialPost, SellingPost
 # Register your models here.
-admin.site.register(SellingBrandsCategory)
+admin.site.register(Brand)
+admin.site.register(SellingPost)
 admin.site.register(Post)
-admin.site.register(ClassesOfTheBrand)
+admin.site.register(SpecialPost)
+admin.site.register(ModelOfBrand)

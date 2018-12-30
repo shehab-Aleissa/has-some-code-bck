@@ -11,9 +11,9 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView ,
     DestroyAPIView)
 
-from .models import SellingBrandsCategory, Post, ClassesOfTheBrand
+from .models import Brand, Post, ModelOfBrand, SpecialPost, SellingPost
 
-from .serializers import SellingBrandsSerializer, RegisterSerializer, PostSerializer, BrandClassSerializer
+from .serializers import SellingBrandsSerializer, RegisterSerializer, PostSerializer, BrandClassSerializer, AllPostsSerializer, SpecialPostSerializer
 # Create your views here.
 
 
@@ -22,13 +22,22 @@ class RegisterAPIView(CreateAPIView):
 
     # GETS THE SELLING BRANDS
 class SellingBrands(ListAPIView):
-    queryset = SellingBrandsCategory.objects.all()
+    queryset = Brand.objects.all()
     serializer_class = SellingBrandsSerializer
 
     # GETS ALL THE POSTS IN THE DATABASE
 class PostList(ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    #GETS ALL THE SPECIAL POSTS IN THE DATABASE
+class SpecialPostList(ListAPIView):
+    queryset = SpecialPost.objects.all()
+    serializer_class = SpecialPostSerializer
+
+class AllSellingPostList(ListAPIView):
+    queryset = SellingPost.objects.all()
+    serializer_class = AllPostsSerializer
 
     # GETS THE LATEST (5) POSTS IN THE DATABASE
 class LatestPosts(ListAPIView):
@@ -55,7 +64,7 @@ class BrandsPosts(ListAPIView):
 
     def get_queryset(self, *args, **kwargs):
         brand_id = self.kwargs['brand_id']
-        brand = SellingBrandsCategory.objects.get(id=brand_id)
+        brand = Brand.objects.get(id=brand_id)
         return brand.post_set.all()
    
 
@@ -65,6 +74,6 @@ class BrandClass(ListAPIView):
     def get_queryset(self, *args, **kwargs):
         brand_id = self.kwargs['brand_id']
         brand = SellingBrands.objects.get(id=brand_id)
-        return brand.classesofthebrand_set.all()
+        return brand.modelofbrand_set.all()
 
 

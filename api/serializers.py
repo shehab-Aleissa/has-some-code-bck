@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_jwt.settings import api_settings
-from .models import SellingBrandsCategory, Post, ClassesOfTheBrand
+from .models import Brand, Post, ModelOfBrand, SpecialPost, SellingPost
 
 
 
@@ -34,49 +34,38 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["username"]
 
 class SellingBrandsSerializer(serializers.ModelSerializer):
-    # category = serializers.SerializerMethodField()
-    # posts = serializers.SerializerMethodField()
-
-    # def get_category
     class Meta:
-        model = SellingBrandsCategory
+        model = Brand
         fields = '__all__'
 
 class BrandClassSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ClassesOfTheBrand
+        model = ModelOfBrand
         fields = '__all__'
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     brand = SellingBrandsSerializer()
-    brand_class = BrandClassSerializer()
+    model = BrandClassSerializer()
     class Meta:
         model = Post
         fields = '__all__'
 
+class SpecialPostSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    brand = SellingBrandsSerializer()
+    model = BrandClassSerializer()
+    class Meta:
+        model = SpecialPost
+        fields = '__all__'
 
-    # def get_posts(self, obj):
-    #     posts = obj.post_set.all()
-    #     return PostSerializer(posts, many=True, context=self.context).data  
 
-# class BrandsPostsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = SellingBrandsCategory
-#         fields = '__all__'
+class AllPostsSerializer(serializers.ModelSerializer):
     
-# class CategorySerializer(serializers.ModelSerializer):
-#     brands = serializers.SerializerMethodField()
+    class Meta:
+        model = SellingPost
+        fields = '__all__'
 
-
-#     class Meta:
-#         model = Category
-#         fields = '__all__'
-    
-    
-#     def get_brands(self, obj):
-#         brands = obj.brands.all()
-#         return SellingCategorySerializer(brands, many=True, context=self.context).data
 
 
 
